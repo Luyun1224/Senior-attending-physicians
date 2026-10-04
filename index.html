@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>一般內科資深主治醫師指導教學｜課程滿意度暨學習回饋問卷</title>
+  <style>
+    :root{
+      --orange:#ff6a00;
+      --orange2:#ff8a00;
+      --coral:#ff4e2d;
+      --deep:#17334b;
+      --teal:#00a9c6;
+      --teal2:#55d3df;
+      --sea:#007f9d;
+      --cream:#fff8ef;
+      --paper:#fffdf9;
+      --ink:#19344a;
+      --muted:#657d8d;
+      --line:#d7e2e8;
+      --shadow:0 18px 45px rgba(27, 61, 83, .15);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 13% 6%, rgba(255,138,0,.12), transparent 18%),
+        radial-gradient(circle at 91% 17%, rgba(0,169,198,.10), transparent 22%),
+        linear-gradient(180deg,#fff8ef 0%,#f6fcfd 38%,#eef9fb 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      width:min(980px, calc(100% - 26px));
+      margin:0 auto;
+      padding:28px 0 70px;
+    }
+
+    .hero{
+      position:relative;
+      min-height:370px;
+      overflow:hidden;
+      border-radius:34px;
+      padding:34px 38px 125px;
+      background:
+        linear-gradient(135deg,var(--coral) 0%,var(--orange) 44%,var(--orange2) 100%);
+      box-shadow:0 24px 65px rgba(210,78,12,.25);
+      isolation:isolate;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:180px;height:180px;
+      right:28px;top:-35px;
+      border-radius:28px;
+      border:15px solid rgba(255,255,255,.10);
+      transform:rotate(15deg);
+      z-index:-1;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:270px;height:270px;
+      left:-95px;top:95px;
+      border-radius:50%;
+      background:rgba(255,255,255,.06);
+      z-index:-1;
+    }
+
+    .hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.24);
+      color:white;
+      font-weight:800;
+      font-size:.83rem;
+      letter-spacing:.08em;
+      padding:8px 12px;
+      border-radius:999px;
+      backdrop-filter:blur(5px);
+    }
+
+    .hero h1{
+      margin:22px 0 8px;
+      color:white;
+      font-size:clamp(2.4rem,7vw,4.6rem);
+      line-height:.98;
+      letter-spacing:-.06em;
+      font-weight:950;
+      text-shadow:0 5px 0 rgba(165,56,0,.18);
+      transform:rotate(-2deg);
+      max-width:760px;
+    }
+
+    .hero h1 span{
+      display:block;
+      margin-top:10px;
+      font-size:.68em;
+      letter-spacing:-.04em;
+    }
+
+    .hero p{
+      color:rgba(255,255,255,.92);
+      font-weight:700;
+      line-height:1.75;
+      margin:24px 0 0;
+      max-width:730px;
+      font-size:.98rem;
+    }
+
+    .hero-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .hero-badges span{
+      color:white;
+      border-radius:999px;
+      padding:8px 12px;
+      background:rgba(117,42,0,.18);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:.82rem;
+      font-weight:750;
+    }
+
+    .wave-wrap{
+      position:absolute;
+      left:0;right:0;bottom:-1px;
+      height:135px;
+      overflow:hidden;
+      z-index:-0;
+    }
+
+    .wave{
+      position:absolute;
+      left:-8%;
+      width:116%;
+      border-radius:50% 50% 0 0 / 100% 100% 0 0;
+    }
+    .wave.one{
+      height:112px;
+      bottom:-42px;
+      background:var(--sea);
+      transform:rotate(2deg);
+    }
+    .wave.two{
+      height:92px;
+      bottom:-40px;
+      background:var(--teal);
+      opacity:.95;
+      transform:rotate(-2deg);
+    }
+    .wave.three{
+      height:70px;
+      bottom:-37px;
+      background:var(--teal2);
+      opacity:.95;
+      transform:rotate(3deg);
+    }
+
+    .bubble{
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,.72);
+      z-index:2;
+    }
+    .b1{width:12px;height:12px;left:7%;bottom:28px}
+    .b2{width:20px;height:20px;left:18%;bottom:18px;opacity:.55}
+    .b3{width:9px;height:9px;left:36%;bottom:36px;opacity:.65}
+    .b4{width:15px;height:15px;right:16%;bottom:30px}
+    .b5{width:7px;height:7px;right:8%;bottom:54px}
+
+    form{
+      margin-top:22px;
+      display:grid;
+      gap:18px;
+    }
+
+    .card{
+      background:rgba(255,253,249,.96);
+      border:2px solid rgba(255,255,255,.95);
+      border-radius:27px;
+      padding:26px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      width:85px;height:85px;
+      right:-36px;top:-36px;
+      border-radius:50%;
+      background:linear-gradient(145deg,rgba(255,106,0,.08),rgba(0,169,198,.08));
+      pointer-events:none;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:22px;
+    }
+
+    .section-no{
+      width:46px;height:46px;
+      flex:0 0 auto;
+      border-radius:15px 15px 15px 5px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(145deg,var(--orange),var(--coral));
+      color:white;
+      font-weight:950;
+      font-size:1rem;
+      box-shadow:0 8px 18px rgba(255,106,0,.18);
+      transform:rotate(-3deg);
+    }
+
+    .section-head h2{
+      margin:1px 0 3px;
+      font-size:1.22rem;
+      letter-spacing:-.02em;
+      font-weight:900;
+    }
+
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.55;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .field{
+      display:grid;
+      gap:8px;
+    }
+
+    .field label,
+    .q-title{
+      font-weight:800;
+      line-height:1.55;
+      font-size:.97rem;
+    }
+
+    .required::after{
+      content:" *";
+      color:var(--coral);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea{
+      width:100%;
+      border:1.5px solid var(--line);
+      background:#fff;
+      border-radius:15px;
+      padding:13px 14px;
+      color:var(--ink);
+      font:inherit;
+      outline:none;
+      transition:.18s ease;
+    }
+
+    input:focus, select:focus, textarea:focus{
+      border-color:var(--teal);
+      box-shadow:0 0 0 4px rgba(0,169,198,.10);
+    }
+
+    textarea{
+      min-height:118px;
+      resize:vertical;
+      line-height:1.7;
+    }
+
+    .scale-note{
+      margin:0 0 17px;
+      padding:13px 15px;
+      border-radius:15px;
+      background:
+        linear-gradient(90deg,rgba(255,106,0,.08),rgba(0,169,198,.08));
+      border-left:5px solid var(--orange);
+      color:#496778;
+      font-size:.88rem;
+      line-height:1.65;
+      font-weight:700;
+    }
+
+    .question{
+      padding:21px 0;
+      border-top:1px dashed #cbdce4;
+    }
+
+    .question:first-of-type{
+      border-top:none;
+      padding-top:4px;
+    }
+
+    .q-num{
+      display:inline-grid;
+      place-items:center;
+      min-width:29px;
+      height:29px;
+      padding:0 7px;
+      margin-right:8px;
+      color:white;
+      background:linear-gradient(145deg,var(--teal),var(--sea));
+      border-radius:10px 10px 10px 4px;
+      font-size:.8rem;
+      font-weight:950;
+      transform:rotate(-2deg);
+      vertical-align:middle;
+    }
+
+    .likert{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:9px;
+      margin-top:13px;
+    }
+
+    .likert input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .likert label{
+      min-height:58px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:2px;
+      text-align:center;
+      border-radius:15px;
+      background:#fff;
+      border:1.5px solid #d8e4ea;
+      cursor:pointer;
+      color:#647c8b;
+      font-size:.8rem;
+      font-weight:800;
+      transition:.18s ease;
+    }
+
+    .likert label b{
+      color:var(--ink);
+      font-size:1.05rem;
+    }
+
+    .likert label:hover{
+      transform:translateY(-2px);
+      border-color:#7bcad6;
+      box-shadow:0 8px 16px rgba(0,169,198,.09);
+    }
+
+    .likert input:checked + label{
+      color:#075f73;
+      border-color:var(--teal);
+      background:
+        linear-gradient(145deg,rgba(82,211,223,.23),rgba(255,138,0,.10));
+      box-shadow:0 8px 18px rgba(0,169,198,.13);
+      transform:translateY(-2px);
+    }
+
+    .recommend-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+      margin-top:12px;
+    }
+
+    .checkline{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      margin-top:12px;
+      color:#587182;
+      font-size:.91rem;
+      font-weight:650;
+    }
+
+    .checkline input{
+      width:18px;height:18px;
+      accent-color:var(--teal);
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    .privacy{
+      color:#708695;
+      font-size:.82rem;
+      line-height:1.6;
+      max-width:590px;
+    }
+
+    button{
+      border:0;
+      padding:14px 25px;
+      border-radius:16px 16px 16px 5px;
+      color:white;
+      font:inherit;
+      font-weight:950;
+      cursor:pointer;
+      background:linear-gradient(135deg,var(--coral),var(--orange));
+      box-shadow:0 12px 26px rgba(255,106,0,.24);
+      transition:.18s ease;
+    }
+
+    button:hover{
+      transform:translateY(-2px) rotate(-1deg);
+      box-shadow:0 16px 30px rgba(255,106,0,.28);
+    }
+
+    .toast{
+      display:none;
+      margin-top:16px;
+      border-radius:15px;
+      padding:14px 16px;
+      background:#eefcff;
+      color:#0b6576;
+      border:1px solid #9fdae3;
+      font-size:.9rem;
+      line-height:1.6;
+      font-weight:700;
+    }
+
+    .foot{
+      text-align:center;
+      color:#7d929f;
+      font-size:.78rem;
+      margin-top:17px;
+    }
+
+    @media(max-width:760px){
+      .wrap{width:min(100% - 16px,980px);padding-top:12px}
+      .hero{min-height:340px;padding:28px 22px 118px;border-radius:27px}
+      .hero h1{font-size:clamp(2.2rem,12vw,3.7rem)}
+      .card{padding:21px 17px;border-radius:22px}
+      .grid-2,.recommend-row{grid-template-columns:1fr}
+      .likert{grid-template-columns:repeat(5,1fr);gap:6px}
+      .likert label{font-size:.7rem;padding:6px 2px}
+      .actions{align-items:stretch}
+      button{width:100%}
+    }
+
+    @media(max-width:480px){
+      .likert{grid-template-columns:1fr}
+      .likert label{
+        min-height:44px;
+        flex-direction:row;
+        gap:8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-tag">一般內科示範中心｜教學回饋</div>
+
+      <h1>
+        資深主治醫師<br>指導教學
+        <span>滿意度暨學習回饋問卷</span>
+      </h1>
+
+      <p>
+        每一次回饋，都是下一次教學變得更好的洋流。請依據本次實際參與經驗填寫，
+        您的意見將作為後續課程規劃、師資安排及教學品質改善的重要依據。
+      </p>
+
+      <div class="hero-badges">
+        <span>資深主治醫師指導</span>
+        <span>約 2–3 分鐘完成</span>
+        <span>匿名統計分析</span>
+      </div>
+
+      <div class="wave-wrap">
+        <div class="wave one"></div>
+        <div class="wave two"></div>
+        <div class="wave three"></div>
+        <i class="bubble b1"></i>
+        <i class="bubble b2"></i>
+        <i class="bubble b3"></i>
+        <i class="bubble b4"></i>
+        <i class="bubble b5"></i>
+      </div>
+    </section>
+
+    <form id="surveyForm">
+      <section class="card">
+        <div class="section-head">
+          <div class="section-no">01</div>
+          <div>
+            <h2>基本資料</h2>
+            <p>僅用於教學成效分析與分層比較。</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label class="required" for="level">目前訓練職級</label>
+            <select id="level" name="level" required>
+              <option value="" selected disabled>請選擇</option>
+              <option>UGY</option>
+              <option>PGY1</option>
+              <option>PGY2</option>
+              <option>住院醫師 R1</option>
+              <option>住院醫師 R2</option>
+              <option>住院醫師 R3 以上</option>
+              <option>其他</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="required" for="date">本次課程日期</label>
+            <input id="date" name="date" type="date" required />
+          </div>
+
+          <div class="field" style="grid-column:1 / -1">
+            <label class="required" for="teacher">本次授課資深主治醫師</label>
+            <input id="teacher" name="teacher" type="text" placeholder="請輸入教師姓名" required />
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div class="section-no">02</div>
+          <div>
+            <h2>課程滿意度與學習成效</h2>
+            <p>請依據本次實際參與經驗進行評分。</p>
+          </div>
+        </div>
+
+        <p class="scale-note">
+          評分方式：5＝非常同意　4＝同意　3＝普通　2＝不同意　1＝非常不同意
+        </p>
+
+        <div id="questions"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div class="section-no">03</div>
+          <div>
+            <h2>質性回饋</h2>
+            <p>讓我們知道哪些地方值得保留，以及下一步可以怎麼更好。</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="q-title" for="feedback">
+            <span class="q-num">11</span>
+            本次課程中，您認為最有收穫的內容為何？對於課程內容或授課方式，有哪些建議？
+          </label>
+          <textarea id="feedback" name="feedback" placeholder="歡迎留下具體觀察、建議或印象深刻的內容。"></textarea>
+        </div>
+
+        <div class="field" style="margin-top:24px">
+          <label class="q-title">
+            <span class="q-num">12</span>
+            除目前授課教師外，是否有您推薦的資深主治醫師，希望未來能邀請參與一般內科指導教學？如有，也歡迎提供希望其分享的主題。
+          </label>
+
+          <div class="recommend-row">
+            <input type="text" id="recommendTeacher" name="recommendTeacher" placeholder="推薦教師姓名" />
+            <input type="text" id="recommendTopic" name="recommendTopic" placeholder="建議授課主題" />
+          </div>
+
+          <label class="checkline">
+            <input type="checkbox" id="noRecommend" name="noRecommend" />
+            目前無特別推薦人選
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="actions">
+          
+          <button type="submit">送出回饋</button>
+        </div>
+
+        <div class="toast" id="toast">
+          
+        </div>
+      </section>
+    </form>
+
+    <div class="foot">一般內科示範中心 · 教學品質持續改善</div>
+  </main>
+
+  <script>
+    const questionData = [
+      "本次課程內容與一般內科臨床工作及學習需求相符。",
+      "課程內容重點清楚、架構完整，容易理解。",
+      "課程內容能結合理論與實際臨床案例。",
+      "授課教師具備充分的專業知識與臨床經驗。",
+      "授課教師能清楚說明重要觀念及臨床思考邏輯。",
+      "授課教師能適時透過提問、案例討論或互動，引導學員思考。",
+      "授課教師能營造適合提問與討論的學習氛圍。",
+      "本次課程有助於提升我對相關疾病診療或臨床處置的理解。",
+      "本次課程所學內容能實際應用於未來的臨床照護工作。",
+      "整體而言，我對本次資深主治醫師指導教學感到滿意，並願意推薦此課程予其他學員。"
+    ];
+
+    const labels = {
+      5:"非常同意",
+      4:"同意",
+      3:"普通",
+      2:"不同意",
+      1:"非常不同意"
+    };
+
+    const questions = document.getElementById("questions");
+
+    questionData.forEach((text, idx) => {
+      const n = idx + 1;
+      const block = document.createElement("div");
+      block.className = "question";
+      block.innerHTML = `
+        <div class="q-title"><span class="q-num">${n}</span>${text}</div>
+        <div class="likert">
+          ${[5,4,3,2,1].map(v => `
+            <input type="radio" id="q${n}_${v}" name="q${n}" value="${v}" required>
+            <label for="q${n}_${v}">
+              <b>${v}</b>
+              <span>${labels[v]}</span>
+            </label>
+          `).join("")}
+        </div>
+      `;
+      questions.appendChild(block);
+    });
+
+    // 自動帶入使用者裝置的當天日期
+    function setToday(){
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      document.getElementById("date").value = `${y}-${m}-${d}`;
+    }
+    setToday();
+
+    const noRecommend = document.getElementById("noRecommend");
+    const recommendTeacher = document.getElementById("recommendTeacher");
+    const recommendTopic = document.getElementById("recommendTopic");
+
+    noRecommend.addEventListener("change", () => {
+      const off = noRecommend.checked;
+      recommendTeacher.disabled = off;
+      recommendTopic.disabled = off;
+      if(off){
+        recommendTeacher.value = "";
+        recommendTopic.value = "";
+      }
+    });
+
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwzWacM8Lts5LVSW-KXIcMQvP1K3QQGO85LjO70j4uARThDE_W9y5RCdbGWYZWunVgilw/exec";
+
+    function makeSubmissionId() {
+      if (window.crypto && crypto.randomUUID) {
+        return crypto.randomUUID();
+      }
+      return "sub-" + Date.now() + "-" + Math.random().toString(36).slice(2, 12);
+    }
+
+    function verifySubmission(submissionId, timeoutMs = 7000) {
+      return new Promise((resolve, reject) => {
+        const callbackName = "__verify_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+        const script = document.createElement("script");
+        let finished = false;
+
+        const cleanup = () => {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timer);
+          try { delete window[callbackName]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+        };
+
+        window[callbackName] = function(result) {
+          cleanup();
+          resolve(!!(result && result.found));
+        };
+
+        script.onerror = function() {
+          cleanup();
+          reject(new Error("無法連線至資料確認服務"));
+        };
+
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error("資料確認逾時"));
+        }, timeoutMs);
+
+        script.src =
+          GAS_WEB_APP_URL +
+          "?action=verify" +
+          "&submissionId=" + encodeURIComponent(submissionId) +
+          "&callback=" + encodeURIComponent(callbackName) +
+          "&_=" + Date.now();
+
+        document.body.appendChild(script);
+      });
+    }
+
+    async function verifyWithRetry(submissionId) {
+      const delays = [700, 1000, 1600, 2400];
+
+      for (let i = 0; i < delays.length; i++) {
+        await new Promise(r => setTimeout(r, delays[i]));
+        try {
+          const found = await verifySubmission(submissionId);
+          if (found) return true;
+        } catch (e) {
+          console.warn("verify attempt failed:", e);
+        }
+      }
+      return false;
+    }
+
+    document.getElementById("surveyForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const form = this;
+      if (!form.reportValidity()) return;
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const toast = document.getElementById("toast");
+      const originalText = submitBtn.textContent;
+      const submissionId = makeSubmissionId();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "資料送出中…";
+      toast.style.display = "none";
+
+      const data = {
+        submissionId: submissionId,
+        date: document.getElementById("date").value,
+        level: document.getElementById("level").value,
+        teacher: document.getElementById("teacher").value.trim(),
+
+        q1: document.querySelector('input[name="q1"]:checked')?.value || "",
+        q2: document.querySelector('input[name="q2"]:checked')?.value || "",
+        q3: document.querySelector('input[name="q3"]:checked')?.value || "",
+        q4: document.querySelector('input[name="q4"]:checked')?.value || "",
+        q5: document.querySelector('input[name="q5"]:checked')?.value || "",
+        q6: document.querySelector('input[name="q6"]:checked')?.value || "",
+        q7: document.querySelector('input[name="q7"]:checked')?.value || "",
+        q8: document.querySelector('input[name="q8"]:checked')?.value || "",
+        q9: document.querySelector('input[name="q9"]:checked')?.value || "",
+        q10: document.querySelector('input[name="q10"]:checked')?.value || "",
+
+        feedback: document.getElementById("feedback").value.trim(),
+        recommendTeacher: document.getElementById("recommendTeacher").value.trim(),
+        recommendTopic: document.getElementById("recommendTopic").value.trim(),
+        noRecommend: document.getElementById("noRecommend").checked
+      };
+
+      try {
+        await fetch(GAS_WEB_APP_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(data)
+        });
+
+        submitBtn.textContent = "確認資料寫入中…";
+
+        const confirmed = await verifyWithRetry(submissionId);
+
+        if (!confirmed) {
+          throw new Error("尚未確認資料已寫入 Google Sheet");
+        }
+
+        toast.innerHTML = `
+          <strong>✓ 回饋已成功送出！</strong><br>
+          感謝您提供寶貴的教學意見。
+        `;
+        toast.style.display = "block";
+        toast.scrollIntoView({behavior:"smooth", block:"center"});
+
+        form.reset();
+        setToday();
+        document.getElementById("recommendTeacher").disabled = false;
+        document.getElementById("recommendTopic").disabled = false;
+
+      } catch (err) {
+        console.error(err);
+        toast.innerHTML = `
+          <strong>⚠ 尚未確認資料成功寫入</strong><br>
+          請勿重複送出；請先確認 GAS 已更新部署，再重新測試。
+        `;
+        toast.style.display = "block";
+        toast.scrollIntoView({behavior:"smooth", block:"center"});
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+
+</script>
+</body>
+</html>
