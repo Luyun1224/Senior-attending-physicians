@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一般內科示範中心｜資深主治醫師指導教學滿意度儀表板</title>
+<style>
+:root {
+  --navy:#17384f;
+  --ink:#19384d;
+  --muted:#6d8290;
+  --paper:#fffdfa;
+  --bg:#f1fafb;
+  --orange:#ff6b00;
+  --orange2:#ff9638;
+  --coral:#f2522f;
+  --teal:#00a7bf;
+  --teal2:#4ccbd5;
+  --sea:#087c96;
+  --blue:#2876a5;
+  --line:#dce9ed;
+  --soft:#eef8fa;
+  --shadow:0 14px 38px rgba(29,69,91,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 5% 0%, rgba(255,107,0,.11), transparent 20%),
+    radial-gradient(circle at 92% 8%, rgba(0,167,191,.12), transparent 22%),
+    linear-gradient(180deg,#fff8ef 0,#f3fbfc 270px,#edf8fa 100%);
+}
+button,select,input{font:inherit}
+.dashboard{width:min(1480px,calc(100% - 28px));margin:0 auto;padding:22px 0 60px}
+
+.hero{
+  position:relative; overflow:hidden; border-radius:30px;
+  background:linear-gradient(120deg,var(--coral),var(--orange) 48%,#ff9b24);
+  color:#fff; padding:30px 34px 64px; box-shadow:0 22px 55px rgba(205,75,17,.22);
+}
+.hero:after{
+  content:""; position:absolute; left:-5%; right:-5%; bottom:-58px; height:100px;
+  border-radius:50% 50% 0 0/100% 100% 0 0; background:var(--sea); transform:rotate(1deg);
+  box-shadow:0 -26px 0 -5px var(--teal),0 -50px 0 -12px var(--teal2);
+}
+.hero-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;position:relative;z-index:2}
+.kicker{font-size:.78rem;font-weight:900;letter-spacing:.12em;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.24);display:inline-block;padding:7px 11px;border-radius:999px}
+h1{margin:14px 0 7px;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.04em;line-height:1.08}
+.hero p{margin:0;opacity:.92;line-height:1.7;font-weight:650}
+.refreshbox{text-align:right;font-size:.82rem;line-height:1.6;opacity:.94;min-width:180px}
+.refresh-btn{margin-top:10px;border:0;background:#fff;color:#e95b13;padding:10px 15px;border-radius:13px;font-weight:900;cursor:pointer;box-shadow:0 8px 18px rgba(111,38,4,.14)}
+
+.filterbar{
+  display:grid;grid-template-columns:repeat(4,minmax(150px,1fr)) auto;
+  gap:12px;margin-top:18px;background:rgba(255,255,255,.96);padding:16px;
+  border-radius:21px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.95);
+  position:relative;z-index:3
+}
+.filter{display:grid;gap:6px}
+.filter label{font-size:.76rem;font-weight:850;color:#67808f}
+.filter select,.filter input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);outline:none}
+.filter-actions{display:flex;gap:8px;align-items:end}
+.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:900;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--teal),var(--sea));color:white}
+.btn-soft{background:#edf6f7;color:#52717f}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.kpi{background:var(--paper);border-radius:22px;padding:19px 20px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.95);position:relative;overflow:hidden}
+.kpi:after{content:"";position:absolute;width:85px;height:85px;border-radius:50%;right:-34px;top:-34px;background:rgba(0,167,191,.07)}
+.kpi.orange:after{background:rgba(255,107,0,.09)}
+.kpi .label{font-size:.79rem;color:var(--muted);font-weight:800}
+.kpi .value{font-size:2rem;font-weight:950;letter-spacing:-.04em;margin-top:6px;color:var(--navy)}
+.kpi .unit{font-size:.92rem;color:#708895;margin-left:3px}
+.kpi .sub{font-size:.78rem;color:#78909d;margin-top:4px}
+
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:14px}
+.card{background:var(--paper);border-radius:22px;padding:20px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.96);min-width:0}
+.card h2{font-size:1.04rem;margin:0;color:var(--navy);letter-spacing:-.02em}
+.card .desc{margin:4px 0 16px;color:var(--muted);font-size:.78rem;line-height:1.55}
+.span4{grid-column:span 4} .span5{grid-column:span 5} .span6{grid-column:span 6} .span7{grid-column:span 7} .span8{grid-column:span 8} .span12{grid-column:span 12}
+
+.dimension-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.dimension{padding:14px;border-radius:17px;background:linear-gradient(145deg,#f7fcfd,#fff);border:1px solid #e1eef1}
+.dimension .d-title{font-size:.78rem;color:#557481;font-weight:850}
+.dimension .d-score{font-size:1.65rem;font-weight:950;margin-top:4px}
+.meter{height:7px;background:#e7f0f2;border-radius:99px;margin-top:8px;overflow:hidden}
+.meter span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--teal2),var(--teal))}
+
+.bar-list{display:grid;gap:11px}
+.bar-row{display:grid;grid-template-columns:minmax(130px,1.25fr) 3fr 48px;gap:10px;align-items:center}
+.bar-label{font-size:.8rem;font-weight:800;color:#456474;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:11px;background:#ebf2f4;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal2),var(--teal))}
+.bar-fill.orange{background:linear-gradient(90deg,#ffb154,var(--orange))}
+.bar-value{font-size:.8rem;font-weight:900;text-align:right}
+
+.svg-wrap{width:100%;overflow:hidden}
+svg{width:100%;height:auto;display:block}
+.axis-text{font-size:11px;fill:#79909c}
+.line-main{fill:none;stroke:var(--teal);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.line-second{fill:none;stroke:var(--orange);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.dot-main{fill:#fff;stroke:var(--teal);stroke-width:3}
+.dot-second{fill:#fff;stroke:var(--orange);stroke-width:2.5}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.77rem;color:#67808d;margin-bottom:8px}
+.legend span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal);margin-right:6px}
+.legend span.orange:before{background:var(--orange)}
+
+.teacher-table{width:100%;border-collapse:collapse}
+.teacher-table th{text-align:left;font-size:.72rem;color:#758b97;padding:8px 8px;border-bottom:1px solid var(--line)}
+.teacher-table td{padding:10px 8px;border-bottom:1px solid #edf2f4;font-size:.82rem}
+.rank{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:#edf8fa;color:var(--sea);font-weight:950}
+.rank.top{background:linear-gradient(145deg,#fff0d3,#ffd18b);color:#c26900}
+.score-pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#e9f8fa;color:#087389;font-weight:900}
+.n-pill{font-size:.72rem;color:#78909c}
+
+.feedbacks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-height:430px;overflow:auto;padding-right:3px}
+.feedback{border:1px solid #e1ecef;border-radius:15px;padding:13px;background:#fbfefe}
+.feedback .meta{font-size:.7rem;color:#8296a1;margin-bottom:7px;display:flex;gap:8px;flex-wrap:wrap}
+.feedback .text{font-size:.82rem;line-height:1.65;color:#385768}
+.empty{padding:30px;text-align:center;color:#899ca5;background:#f8fbfc;border-radius:14px;font-size:.86rem}
+
+.insight-list{display:grid;gap:9px}
+.insight{display:flex;gap:10px;padding:11px;border-radius:14px;background:#f7fbfc;border:1px solid #e7f0f2}
+.insight .no{width:28px;height:28px;display:grid;place-items:center;flex:none;border-radius:9px;background:var(--orange);color:#fff;font-weight:950;font-size:.78rem}
+.insight.good .no{background:var(--teal)}
+.insight .it{font-size:.79rem;line-height:1.5}
+.insight .it b{color:var(--navy)}
+
+.status{display:none;margin-top:14px;padding:13px 15px;border-radius:14px;background:#fff7e9;border:1px solid #ffd59a;color:#875316;font-size:.84rem;font-weight:700}
+.loading{position:fixed;inset:0;background:rgba(242,250,251,.84);backdrop-filter:blur(5px);z-index:50;display:grid;place-items:center}
+.spinner{width:46px;height:46px;border:5px solid #dcebed;border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:1050px){
+  .filterbar{grid-template-columns:repeat(2,1fr)}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .span4,.span5,.span6,.span7,.span8{grid-column:span 12}
+}
+@media(max-width:650px){
+  .dashboard{width:calc(100% - 14px);padding-top:8px}
+  .hero{padding:24px 20px 58px;border-radius:24px}
+  .hero-top{display:block} .refreshbox{text-align:left;margin-top:15px}
+  .filterbar{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .dimension-grid{grid-template-columns:1fr 1fr}
+  .feedbacks{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:110px 1fr 42px}
+}
+@media print{
+  body{background:white}
+  .dashboard{width:100%;padding:0}
+  .filterbar,.refresh-btn{display:none!important}
+  .hero{box-shadow:none;border-radius:0}
+  .card,.kpi{box-shadow:none;border:1px solid #ddd}
+}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="spinner"></div></div>
+
+<main class="dashboard">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">GENERAL INTERNAL MEDICINE · TEACHING DASHBOARD</div>
+        <h1>資深主治醫師指導教學<br>滿意度分析儀表板</h1>
+        <p>整合課程內容、教師教學、學習成效、整體滿意度與質性回饋，作為課程改善與師資規劃依據。</p>
+      </div>
+      <div class="refreshbox">
+        <div>資料更新時間</div>
+        <strong id="updatedAt">—</strong><br>
+        <button class="refresh-btn" onclick="loadData()">↻ 重新整理資料</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="filterbar">
+    <div class="filter">
+      <label>年度</label>
+      <select id="yearFilter"></select>
+    </div>
+    <div class="filter">
+      <label>訓練職級</label>
+      <select id="levelFilter"></select>
+    </div>
+    <div class="filter">
+      <label>授課教師</label>
+      <select id="teacherFilter"></select>
+    </div>
+    <div class="filter">
+      <label>質性回饋搜尋</label>
+      <input id="textFilter" type="text" placeholder="輸入關鍵字…">
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-primary" onclick="applyFilters()">套用</button>
+      <button class="btn btn-soft" onclick="resetFilters()">重設</button>
+    </div>
+  </section>
+
+  <div class="status" id="status"></div>
+
+  <section class="kpis">
+    <div class="kpi orange">
+      <div class="label">有效回覆數</div>
+      <div class="value" id="kpiN">0<span class="unit">份</span></div>
+      <div class="sub" id="kpiNSub">目前篩選條件</div>
+    </div>
+    <div class="kpi">
+      <div class="label">10 題整體平均</div>
+      <div class="value" id="kpiAvg">—<span class="unit">/ 5</span></div>
+      <div class="sub">Q1–Q10 平均分數</div>
+    </div>
+    <div class="kpi orange">
+      <div class="label">整體滿意率</div>
+      <div class="value" id="kpiSat">—<span class="unit">%</span></div>
+      <div class="sub">Q10 評分 4–5 分比例</div>
+    </div>
+    <div class="kpi">
+      <div class="label">授課教師數</div>
+      <div class="value" id="kpiTeachers">0<span class="unit">位</span></div>
+      <div class="sub">目前資料涵蓋教師</div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <article class="card span12">
+      <h2>四大教學品質構面</h2>
+      <p class="desc">課程內容 Q1–Q3｜教師教學 Q4–Q7｜學習成效 Q8–Q9｜整體評價 Q10</p>
+      <div class="dimension-grid" id="dimensionGrid"></div>
+    </article>
+
+    <article class="card span7">
+      <h2>每月滿意度趨勢</h2>
+      <p class="desc">比較「10 題整體平均」與「Q10 整體滿意度」的月份變化。</p>
+      <div class="legend"><span>10 題整體平均</span><span class="orange">Q10 整體滿意度</span></div>
+      <div class="svg-wrap" id="trendChart"></div>
+    </article>
+
+    <article class="card span5">
+      <h2>職級分布</h2>
+      <p class="desc">了解目前回覆樣本的學員組成。</p>
+      <div class="bar-list" id="levelBars"></div>
+    </article>
+
+    <article class="card span7">
+      <h2>授課教師表現排行</h2>
+      <p class="desc">依 10 題平均分數排序，同時呈現 Q10 與回覆數；回覆數較少時建議搭配 N 值解讀。</p>
+      <div style="overflow:auto">
+        <table class="teacher-table">
+          <thead><tr><th>排行</th><th>教師</th><th>整體平均</th><th>Q10</th><th>回覆數</th></tr></thead>
+          <tbody id="teacherTable"></tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="card span5">
+      <h2>學員推薦資深主治醫師</h2>
+      <p class="desc">統計質性題中被提名的教師，可作為後續邀課名單參考。</p>
+      <div class="bar-list" id="recommendBars"></div>
+    </article>
+
+    <article class="card span6">
+      <h2>題項優勢 TOP 3</h2>
+      <p class="desc">目前平均分數最高的三項教學表現。</p>
+      <div class="insight-list" id="strengths"></div>
+    </article>
+
+    <article class="card span6">
+      <h2>優先改善觀察 TOP 3</h2>
+      <p class="desc">相對分數較低的題項；即使整體分數高，也適合作為持續品質改善焦點。</p>
+      <div class="insight-list" id="improvements"></div>
+    </article>
+
+    <article class="card span12">
+      <h2>學員質性回饋</h2>
+      <p class="desc">依目前篩選條件呈現最新回饋；可使用上方關鍵字進一步搜尋。</p>
+      <div class="feedbacks" id="feedbackList"></div>
+    </article>
+  </section>
+</main>
+
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwzWacM8Lts5LVSW-KXIcMQvP1K3QQGO85LjO70j4uARThDE_W9y5RCdbGWYZWunVgilw/exec";
+let allRows = [];
+let filteredRows = [];
+
+const QUESTION_LABELS = [
+  "課程符合臨床工作與學習需求",
+  "課程重點清楚、架構完整",
+  "理論能結合實際臨床案例",
+  "教師具充分專業知識與臨床經驗",
+  "能清楚說明重要觀念與臨床思考",
+  "能透過提問／案例討論引導思考",
+  "能營造適合提問與討論的氛圍",
+  "有助提升疾病診療或處置理解",
+  "所學可應用於未來臨床照護",
+  "整體滿意並願意推薦課程"
+];
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+function num(v) { const n=Number(v); return Number.isFinite(n)?n:null; }
+function avg(arr) {
+  const vals=arr.map(Number).filter(Number.isFinite);
+  return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+}
+function fmt(v,d=2) { return v==null || !Number.isFinite(v) ? "—" : v.toFixed(d); }
+function rocYear(dateStr) {
+  const y=parseInt(String(dateStr).slice(0,4),10);
+  return Number.isFinite(y) ? y-1911 : null;
+}
+function monthKey(dateStr) {
+  const m=String(dateStr||"").match(/(\d{4})[\/-](\d{1,2})/);
+  return m ? m[1]+"-"+String(m[2]).padStart(2,"0") : "";
+}
+function rowScores(r) { return Array.from({length:10},(_,i)=>num(r["q"+(i+1)])).filter(v=>v!=null); }
+function rowAvg(r) { return avg(rowScores(r)); }
+
+function jsonp(url, timeout=12000) {
+  return new Promise((resolve,reject)=>{
+    const cb="__dash_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+    const s=document.createElement("script");
+    let done=false;
+    const cleanup=()=>{ if(done)return;done=true;clearTimeout(t);try{delete window[cb]}catch(e){};s.remove(); };
+    window[cb]=(data)=>{cleanup();resolve(data)};
+    s.onerror=()=>{cleanup();reject(new Error("無法讀取 GAS 資料"))};
+    const t=setTimeout(()=>{cleanup();reject(new Error("讀取資料逾時"))},timeout);
+    s.src=url+(url.includes("?")?"&":"?")+"callback="+encodeURIComponent(cb)+"&_="+Date.now();
+    document.body.appendChild(s);
+  });
+}
+
+async function loadData() {
+  document.getElementById("loading").style.display="grid";
+  try {
+    const res=await jsonp(GAS_URL+"?action=dashboard");
+    if(!res || !res.success) throw new Error(res?.message||"GAS 未回傳有效資料");
+    allRows=Array.isArray(res.rows)?res.rows:[];
+    document.getElementById("updatedAt").textContent=res.generatedAt||new Date().toLocaleString("zh-TW");
+    setupFilters();
+    applyFilters();
+    hideStatus();
+  } catch(err) {
+    showStatus("儀表板目前無法讀取資料："+err.message+"。請確認 GAS 已用『新增版本』重新部署。");
+  } finally {
+    document.getElementById("loading").style.display="none";
+  }
+}
+
+function setupFilters() {
+  const year=document.getElementById("yearFilter");
+  const level=document.getElementById("levelFilter");
+  const teacher=document.getElementById("teacherFilter");
+
+  const current={year:year.value,level:level.value,teacher:teacher.value};
+
+  const years=[...new Set(allRows.map(r=>rocYear(r.date)).filter(Boolean))].sort((a,b)=>b-a);
+  year.innerHTML='<option value="">全部年度</option>'+years.map(y=>`<option value="${y}">${y}年度（${y+1911}）</option>`).join("");
+
+  const levels=[...new Set(allRows.map(r=>r.level).filter(Boolean))].sort();
+  level.innerHTML='<option value="">全部職級</option>'+levels.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+
+  const teachers=[...new Set(allRows.map(r=>r.teacher).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"zh-Hant"));
+  teacher.innerHTML='<option value="">全部教師</option>'+teachers.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+
+  if([...year.options].some(o=>o.value===current.year)) year.value=current.year;
+  if([...level.options].some(o=>o.value===current.level)) level.value=current.level;
+  if([...teacher.options].some(o=>o.value===current.teacher)) teacher.value=current.teacher;
+}
+
+function applyFilters() {
+  const y=document.getElementById("yearFilter").value;
+  const l=document.getElementById("levelFilter").value;
+  const t=document.getElementById("teacherFilter").value;
+  const q=document.getElementById("textFilter").value.trim().toLowerCase();
+
+  filteredRows=allRows.filter(r=>{
+    if(y && String(rocYear(r.date))!==y) return false;
+    if(l && r.level!==l) return false;
+    if(t && r.teacher!==t) return false;
+    if(q) {
+      const blob=[r.feedback,r.recommendTeacher,r.recommendTopic,r.teacher,r.level].join(" ").toLowerCase();
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  });
+  renderAll();
+}
+
+function resetFilters() {
+  document.getElementById("yearFilter").value="";
+  document.getElementById("levelFilter").value="";
+  document.getElementById("teacherFilter").value="";
+  document.getElementById("textFilter").value="";
+  applyFilters();
+}
+
+function renderAll() {
+  renderKpis();
+  renderDimensions();
+  renderTrend();
+  renderLevels();
+  renderTeachers();
+  renderRecommendations();
+  renderInsights();
+  renderFeedbacks();
+}
+
+function renderKpis() {
+  const n=filteredRows.length;
+  const overall=avg(filteredRows.map(rowAvg).filter(v=>v!=null));
+  const q10=filteredRows.map(r=>num(r.q10)).filter(v=>v!=null);
+  const sat=q10.length ? q10.filter(v=>v>=4).length/q10.length*100 : null;
+  const teachers=new Set(filteredRows.map(r=>r.teacher).filter(Boolean)).size;
+
+  document.getElementById("kpiN").innerHTML=`${n}<span class="unit">份</span>`;
+  document.getElementById("kpiAvg").innerHTML=`${fmt(overall)}<span class="unit">/ 5</span>`;
+  document.getElementById("kpiSat").innerHTML=`${sat==null?"—":sat.toFixed(1)}<span class="unit">%</span>`;
+  document.getElementById("kpiTeachers").innerHTML=`${teachers}<span class="unit">位</span>`;
+}
+
+function renderDimensions() {
+  const dims=[
+    ["課程內容",1,3],
+    ["教師教學",4,7],
+    ["學習成效",8,9],
+    ["整體評價",10,10]
+  ];
+  document.getElementById("dimensionGrid").innerHTML=dims.map(([name,a,b])=>{
+    const scores=[];
+    filteredRows.forEach(r=>{for(let i=a;i<=b;i++){const v=num(r["q"+i]);if(v!=null)scores.push(v)}});
+    const s=avg(scores);
+    const positive=scores.length?scores.filter(v=>v>=4).length/scores.length*100:null;
+    return `<div class="dimension">
+      <div class="d-title">${name}</div>
+      <div class="d-score">${fmt(s)}<span style="font-size:.8rem;color:#8296a1"> / 5</span></div>
+      <div class="meter"><span style="width:${s==null?0:s/5*100}%"></span></div>
+      <div style="font-size:.72rem;color:#78909c;margin-top:7px">滿意以上 ${positive==null?"—":positive.toFixed(1)+"%"}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderTrend() {
+  const groups={};
+  filteredRows.forEach(r=>{
+    const k=monthKey(r.date); if(!k)return;
+    if(!groups[k]) groups[k]=[];
+    groups[k].push(r);
+  });
+  const keys=Object.keys(groups).sort();
+  const el=document.getElementById("trendChart");
+  if(!keys.length){el.innerHTML='<div class="empty">目前篩選條件沒有月份資料</div>';return;}
+
+  const data=keys.map(k=>({
+    k,
+    a:avg(groups[k].map(rowAvg).filter(v=>v!=null)),
+    q:avg(groups[k].map(r=>num(r.q10)).filter(v=>v!=null))
+  }));
+
+  const W=760,H=300,L=44,R=20,T=20,B=42;
+  const x=i=>L+(data.length===1?(W-L-R)/2:i*(W-L-R)/(data.length-1));
+  const y=v=>T+(5-v)*(H-T-B)/4; // 1 to 5
+  const ptsA=data.map((d,i)=>`${x(i)},${y(d.a??1)}`).join(" ");
+  const ptsQ=data.map((d,i)=>`${x(i)},${y(d.q??1)}`).join(" ");
+
+  let svg=`<svg viewBox="0 0 ${W} ${H}" aria-label="每月滿意度趨勢">`;
+  for(let s=1;s<=5;s++){
+    const yy=y(s);
+    svg+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e6eef1" stroke-width="1"/>
+          <text x="${L-10}" y="${yy+4}" text-anchor="end" class="axis-text">${s}</text>`;
+  }
+  svg+=`<polyline points="${ptsA}" class="line-main"/><polyline points="${ptsQ}" class="line-second"/>`;
+  data.forEach((d,i)=>{
+    svg+=`<circle cx="${x(i)}" cy="${y(d.a??1)}" r="4.5" class="dot-main"/>
+          <circle cx="${x(i)}" cy="${y(d.q??1)}" r="4" class="dot-second"/>
+          <text x="${x(i)}" y="${H-15}" text-anchor="middle" class="axis-text">${d.k.slice(5)}月</text>`;
+  });
+  svg+="</svg>";
+  el.innerHTML=svg;
+}
+
+function renderLevels() {
+  const counts={};
+  filteredRows.forEach(r=>{if(r.level)counts[r.level]=(counts[r.level]||0)+1});
+  const items=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max=Math.max(1,...items.map(x=>x[1]));
+  document.getElementById("levelBars").innerHTML=items.length?items.map(([k,v])=>`
+    <div class="bar-row">
+      <div class="bar-label" title="${esc(k)}">${esc(k)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${v/max*100}%"></div></div>
+      <div class="bar-value">${v}</div>
+    </div>`).join(""):'<div class="empty">目前沒有職級資料</div>';
+}
+
+function renderTeachers() {
+  const map={};
+  filteredRows.forEach(r=>{
+    if(!r.teacher)return;
+    (map[r.teacher] ||= []).push(r);
+  });
+  const rows=Object.entries(map).map(([teacher,rs])=>({
+    teacher,n:rs.length,
+    avg:avg(rs.map(rowAvg).filter(v=>v!=null)),
+    q10:avg(rs.map(r=>num(r.q10)).filter(v=>v!=null))
+  })).sort((a,b)=>(b.avg??0)-(a.avg??0)||(b.n-a.n));
+  const tbody=document.getElementById("teacherTable");
+  tbody.innerHTML=rows.length?rows.map((r,i)=>`<tr>
+    <td><span class="rank ${i<3?"top":""}">${i+1}</span></td>
+    <td><b>${esc(r.teacher)}</b></td>
+    <td><span class="score-pill">${fmt(r.avg)}</span></td>
+    <td>${fmt(r.q10)}</td>
+    <td><span class="n-pill">N=${r.n}</span></td>
+  </tr>`).join(""):'<tr><td colspan="5"><div class="empty">目前沒有教師資料</div></td></tr>';
+}
+
+function renderRecommendations() {
+  const counts={};
+  filteredRows.forEach(r=>{
+    const name=String(r.recommendTeacher||"").trim();
+    if(name) counts[name]=(counts[name]||0)+1;
+  });
+  const items=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const max=Math.max(1,...items.map(x=>x[1]));
+  document.getElementById("recommendBars").innerHTML=items.length?items.map(([k,v])=>`
+    <div class="bar-row">
+      <div class="bar-label" title="${esc(k)}">${esc(k)}</div>
+      <div class="bar-track"><div class="bar-fill orange" style="width:${v/max*100}%"></div></div>
+      <div class="bar-value">${v}</div>
+    </div>`).join(""):'<div class="empty">目前尚無推薦教師提名</div>';
+}
+
+function renderInsights() {
+  const qstats=QUESTION_LABELS.map((label,i)=>{
+    const vals=filteredRows.map(r=>num(r["q"+(i+1)])).filter(v=>v!=null);
+    return {idx:i+1,label,score:avg(vals),n:vals.length};
+  }).filter(x=>x.score!=null);
+
+  const high=[...qstats].sort((a,b)=>b.score-a.score).slice(0,3);
+  const low=[...qstats].sort((a,b)=>a.score-b.score).slice(0,3);
+
+  document.getElementById("strengths").innerHTML=high.length?high.map((x,i)=>`
+    <div class="insight good"><div class="no">${i+1}</div><div class="it"><b>Q${x.idx}｜${esc(x.label)}</b><br>平均 ${fmt(x.score)} / 5（N=${x.n}）</div></div>`).join(""):'<div class="empty">尚無足夠資料</div>';
+
+  document.getElementById("improvements").innerHTML=low.length?low.map((x,i)=>`
+    <div class="insight"><div class="no">${i+1}</div><div class="it"><b>Q${x.idx}｜${esc(x.label)}</b><br>平均 ${fmt(x.score)} / 5（N=${x.n}）</div></div>`).join(""):'<div class="empty">尚無足夠資料</div>';
+}
+
+function renderFeedbacks() {
+  const items=filteredRows.filter(r=>String(r.feedback||"").trim()).slice().sort((a,b)=>String(b.timestamp||"").localeCompare(String(a.timestamp||""))).slice(0,30);
+  document.getElementById("feedbackList").innerHTML=items.length?items.map(r=>`
+    <div class="feedback">
+      <div class="meta"><span>${esc(r.date||"")}</span><span>${esc(r.level||"")}</span><span>授課：${esc(r.teacher||"—")}</span></div>
+      <div class="text">${esc(r.feedback)}</div>
+    </div>`).join(""):'<div class="empty" style="grid-column:1/-1">目前篩選條件沒有質性回饋</div>';
+}
+
+function showStatus(msg) {
+  const el=document.getElementById("status");el.textContent=msg;el.style.display="block";
+}
+function hideStatus() { document.getElementById("status").style.display="none"; }
+
+document.getElementById("textFilter").addEventListener("keydown",e=>{if(e.key==="Enter")applyFilters()});
+loadData();
+</script>
+</body>
+</html>
