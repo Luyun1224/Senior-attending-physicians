@@ -731,16 +731,19 @@
     }
 
     async function verifyWithRetry(submissionId) {
-      const delays = [700, 1000, 1600, 2400];
-
-      for (let i = 0; i < delays.length; i++) {
-        await new Promise(r => setTimeout(r, delays[i]));
+      // 立即確認；所有重試共用期限，避免逐次逾時累加。
+      const deadline = performance.now() + 12000;
+      for (let i = 0; i < 4; i++) {
+        const remaining = deadline - performance.now();
+        if (remaining <= 0) break;
         try {
-          const found = await verifySubmission(submissionId);
+          const found = await verifySubmission(submissionId, Math.min(4000, remaining));
           if (found) return true;
         } catch (e) {
           console.warn("verify attempt failed:", e);
         }
+        const pause = Math.min(250, deadline - performance.now());
+        if (i < 3 && pause > 0) await new Promise(r => setTimeout(r, pause));
       }
       return false;
     }
@@ -752,6 +755,7 @@
       if (!form.reportValidity()) return;
 
       const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn.disabled) return;
       const toast = document.getElementById("toast");
       const originalText = submitBtn.textContent;
       const submissionId = makeSubmissionId();
@@ -784,14 +788,24 @@
       };
 
       try {
-        await fetch(GAS_WEB_APP_URL, {
+        const controller = new AbortController();
+        const sendTimer = setTimeout(() => controller.abort(), 15000);
+        try {
+          await fetch(GAS_WEB_APP_URL, {
           method: "POST",
           mode: "no-cors",
+          signal: controller.signal,
           headers: {
             "Content-Type": "text/plain;charset=utf-8"
           },
           body: JSON.stringify(data)
-        });
+          });
+        } catch (err) {
+          // 回應逾時不代表寫入失敗；仍以 submissionId 查證，勿重送 POST。
+          console.warn("submission response unavailable:", err);
+        } finally {
+          clearTimeout(sendTimer);
+        }
 
         submitBtn.textContent = "確認資料寫入中…";
 
@@ -817,7 +831,7 @@
         console.error(err);
         toast.innerHTML = `
           <strong>⚠ 尚未確認資料成功寫入</strong><br>
-          請勿重複送出；請先確認 GAS 已更新部署，再重新測試。
+          資料可能仍在處理中，您填寫的內容已保留。請勿立即重複送出，請聯絡管理員確認收件狀態。
         `;
         toast.style.display = "block";
         toast.scrollIntoView({behavior:"smooth", block:"center"});
