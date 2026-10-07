@@ -761,7 +761,7 @@
       const submissionId = makeSubmissionId();
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "資料送出中…";
+      submitBtn.textContent = "已送出";
       toast.style.display = "none";
 
       const data = {
@@ -787,18 +787,28 @@
         noRecommend: document.getElementById("noRecommend").checked
       };
 
+      // 立即回饋，傳送與寫入查證在背景進行；查證前保留原始答案。
+      toast.innerHTML = `
+        <strong>✓ 回饋已成功送出！</strong><br>
+        感謝您提供寶貴的教學意見。
+      `;
+      toast.style.display = "block";
+      toast.setAttribute("role", "status");
+      toast.scrollIntoView({behavior:"smooth", block:"center"});
+
       try {
         const controller = new AbortController();
         const sendTimer = setTimeout(() => controller.abort(), 15000);
         try {
           await fetch(GAS_WEB_APP_URL, {
-          method: "POST",
-          mode: "no-cors",
-          signal: controller.signal,
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(data)
+            method: "POST",
+            mode: "no-cors",
+            keepalive: true,
+            signal: controller.signal,
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(data)
           });
         } catch (err) {
           // 回應逾時不代表寫入失敗；仍以 submissionId 查證，勿重送 POST。
@@ -807,20 +817,11 @@
           clearTimeout(sendTimer);
         }
 
-        submitBtn.textContent = "確認資料寫入中…";
-
         const confirmed = await verifyWithRetry(submissionId);
 
         if (!confirmed) {
           throw new Error("尚未確認資料已寫入 Google Sheet");
         }
-
-        toast.innerHTML = `
-          <strong>✓ 回饋已成功送出！</strong><br>
-          感謝您提供寶貴的教學意見。
-        `;
-        toast.style.display = "block";
-        toast.scrollIntoView({behavior:"smooth", block:"center"});
 
         form.reset();
         setToday();
