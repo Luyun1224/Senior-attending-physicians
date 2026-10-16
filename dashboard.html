@@ -301,40 +301,26 @@ button,select,input{font:inherit}
 }
 
 
-/* Spacious overview and on-site survey access */
+/* Spacious overview */
 .hero-top>div:first-child{min-width:0}
 .hero-tools{flex-shrink:0}
 .period-heading{position:relative;z-index:2;margin:36px 0 18px;font-size:1rem;line-height:1.8;letter-spacing:.06em}
 .hero-stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.hero-stat{padding:24px;border:1px solid rgba(255,255,255,.35);border-radius:22px;background:rgba(115,36,0,.16)}
+.hero-stat{--stat-accent:#087087;padding:24px;border:1px solid rgba(255,255,255,.85);border-top:5px solid var(--stat-accent);border-radius:22px;background:#eaf9fc;color:var(--ink);box-shadow:0 12px 24px rgba(104,43,8,.12)}
+.hero-stat:nth-child(2){--stat-accent:#3466a3;background:#eef4ff}
+.hero-stat:nth-child(3){--stat-accent:#24734f;background:#edf9f0}
+.hero-stat:nth-child(4){--stat-accent:#7351a1;background:#f6effc}
 .hero-stat .label{font-size:.95rem;line-height:1.6;font-weight:800}
-.hero-stat .value{margin:12px 0 8px;font-size:clamp(2.4rem,4vw,4rem);font-weight:950;line-height:1.2;font-variant-numeric:tabular-nums}
+.hero-stat .value{color:var(--stat-accent);margin:12px 0 8px;font-size:clamp(2.4rem,4vw,4rem);font-weight:950;line-height:1.2;font-variant-numeric:tabular-nums}
 .hero-stat .unit{font-size:1rem;margin-left:8px}
-.hero-stat .sub{font-size:.8rem;line-height:1.7;color:#fff5e9}
+.hero-stat .sub{font-size:.8rem;line-height:1.7;color:#526b7c}
 .kpi .value{font-variant-numeric:tabular-nums}
-.survey-footer{display:flex;align-items:center;justify-content:space-between;gap:48px;margin-top:32px;padding:40px;background:linear-gradient(135deg,#fff8ee,#effcfd);border:1px solid #fff;border-radius:28px;box-shadow:var(--shadow)}
-.survey-copy{max-width:760px;min-width:0}
-.survey-footer h2{font-size:1.8rem;line-height:1.5;margin:8px 0 16px;letter-spacing:.04em}
-.survey-footer p{line-height:1.9;color:var(--muted)}
-.survey-link-label{display:block;font-weight:800;font-size:.85rem;margin:24px 0 8px}
-.survey-url{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;color:var(--ink);background:#fff}
-.survey-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
-.survey-actions a{text-decoration:none}
-.qr-button{flex-shrink:0;border:0;border-radius:24px;background:#fff;padding:18px;cursor:pointer;color:var(--sea);font:inherit;font-weight:800;box-shadow:var(--shadow)}
-.qr-code svg{display:block;width:224px;height:auto;max-width:100%}
-.qr-button span{display:block;margin-top:8px}
-.qr-dialog{border:0;border-radius:28px;padding:32px;max-width:min(92vw,580px);color:var(--ink);text-align:center}
-.qr-dialog::backdrop{background:rgba(10,36,49,.75);backdrop-filter:blur(6px)}
-.qr-dialog .qr-code svg{width:440px;max-width:100%;margin:16px auto}
-.qr-dialog h2{line-height:1.6;margin-top:0}
-.qr-dialog p{line-height:1.8}
 .back-top{position:fixed;right:24px;bottom:24px;z-index:50;display:flex;align-items:center;gap:8px;border:1px solid #fff;border-radius:999px;padding:14px 20px;background:var(--sea);color:#fff;box-shadow:var(--shadow);font-weight:800;cursor:pointer}
 .back-top[hidden]{display:none}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:4px}
 @media(max-width:1000px){
   .hero-top{flex-direction:column}.hero-tools{text-align:left;min-width:0}
   .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .survey-footer{gap:24px;padding:28px}
 }
 @media(max-width:720px){
   main{width:calc(100% - 24px);padding-top:12px}
@@ -343,11 +329,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
   .hero-stat{padding:16px 12px}.hero-stat .label{font-size:.8rem}.hero-stat .value{font-size:2.2rem}
   .hero-stats{gap:10px}.card{padding:22px 18px}.card h2{font-size:1.15rem}
   .kpis{gap:12px}.kpi{padding:18px 14px}.grid{gap:20px}
-  .survey-footer{flex-direction:column;align-items:stretch;padding:24px}.qr-button{align-self:center}
   .back-top{right:14px;bottom:14px;padding:12px 16px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.spinner{animation:none}}
-@media print{.back-top,.survey-actions,.survey-link-label,.survey-url,.qr-dialog{display:none!important}.hero-stats{break-inside:avoid}.survey-footer{break-inside:avoid}}
+@media print{.back-top{display:none!important}.hero-stats{break-inside:avoid}}
 
 </style>
 </head>
@@ -444,22 +429,8 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
       <div class="feedbacks" id="feedbackList"></div>
     </article>
   </section>
-  <footer class="survey-footer" aria-labelledby="surveyTitle">
-    <div class="survey-copy">
-      <span class="tag orange">讓每一次教學，都有下一次更好的回饋</span>
-      <h2 id="surveyTitle">掃描 QR Code，留下您的學習回饋</h2>
-      <p>邀請現場學員拿起手機掃描，填寫本次課程滿意度問卷。約 2–3 分鐘，幫助我們規劃更貼近學習需求的課程。</p>
-      <label class="survey-link-label" for="surveyUrl">問卷連結</label>
-      <input class="survey-url" id="surveyUrl" type="url" aria-describedby="qrStatus">
-      <p id="qrStatus" role="status"></p>
-      <div class="survey-actions"><a class="btn btn-primary" id="surveyLink" target="_blank" rel="noopener">開啟填寫問卷 ↗</a><button class="btn btn-soft" id="enlargeQr" type="button">放大 QR Code</button></div>
-    </div>
-    <button class="qr-button" id="qrPreview" type="button" aria-label="放大問卷 QR Code"><div class="qr-code" id="surveyQr"></div><span>點擊放大・現場掃描</span></button>
-  </footer>
 </main>
 <button class="back-top" id="backTop" type="button" aria-label="返回最上面" hidden>↑ 返回最上面</button>
-<dialog class="qr-dialog" id="qrDialog" aria-labelledby="qrDialogTitle"><h2 id="qrDialogTitle">掃描填寫課程滿意度問卷</h2><div class="qr-code" id="largeQr"></div><p>您的回饋，是教學持續進步的動力。</p><form method="dialog"><button class="btn btn-primary">關閉</button></form></dialog>
-<script src="assets/vendor/qrcode.js"></script>
 
 <script>
 const GAS_URL="https://script.google.com/macros/s/AKfycbwzWacM8Lts5LVSW-KXIcMQvP1K3QQGO85LjO70j4uARThDE_W9y5RCdbGWYZWunVgilw/exec";
@@ -792,28 +763,6 @@ window.addEventListener('scroll',updateBackTop,{passive:true});updateBackTop();
 backTop.addEventListener('click',()=>{
   window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
 });
-const qrDialog=document.getElementById('qrDialog');
-const qrPreview=document.getElementById('qrPreview'),enlargeQr=document.getElementById('enlargeQr');
-[qrPreview,enlargeQr].forEach(button=>button.addEventListener('click',()=>qrDialog.showModal()));
-qrDialog.addEventListener('click',event=>{if(event.target===qrDialog){const r=qrDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)qrDialog.close()}});
-function updateSurveyQr(){
-  const input=document.getElementById('surveyUrl'),link=document.getElementById('surveyLink'),status=document.getElementById('qrStatus');
-  try{
-    const url=new URL(input.value);
-    if(!['https:','http:'].includes(url.protocol))throw new Error('invalid URL');
-    const qr=qrcode(0,'M');qr.addData(url.href);qr.make();
-    const svg=qr.createSvgTag({cellSize:6,margin:24,scalable:true});
-    document.getElementById('surveyQr').innerHTML=svg;document.getElementById('largeQr').innerHTML=svg;
-    link.href=url.href;link.hidden=false;qrPreview.disabled=false;enlargeQr.disabled=false;
-    status.textContent=['localhost','127.0.0.1','[::1]'].includes(url.hostname)?'目前是本機連結，請改填現場手機可連線的問卷網址。':'';
-  }catch{
-    document.getElementById('surveyQr').textContent='請設定問卷連結';document.getElementById('largeQr').textContent='';
-    link.removeAttribute('href');link.hidden=true;qrPreview.disabled=true;enlargeQr.disabled=true;
-    status.textContent='請輸入完整的 https:// 或 http:// 問卷網址。';
-  }
-}
-document.getElementById('surveyUrl').value=new URL('index.html',location.href).href;
-document.getElementById('surveyUrl').addEventListener('input',updateSurveyQr);updateSurveyQr();
 loadData();
 </script>
 </body>
