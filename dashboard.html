@@ -374,7 +374,12 @@ button,select,input{font:inherit}
       <div class="teacher-ranking-wrap" id="teacherGrid"></div>
     </article>
 
-    
+    <article class="card span12">
+      <h2>學員期待邀請的資深主治醫師與授課主題</h2>
+      <p class="desc">依目前篩選條件呈現推薦教師、提及次數與每筆建議主題；相同姓名文字合併計數，未填教師的主題也會保留。</p>
+      <div id="recommendationSummary" class="teacher-meta" style="margin-bottom:14px"></div>
+      <div class="feedbacks" id="recommendationList"></div>
+    </article>
 
     <article class="card span12">
       <h2>學員質性回饋原文</h2>
@@ -483,7 +488,7 @@ function resetFilters(){
   applyFilters();
 }
 
-function renderAll(){renderKpis();renderDimensions();renderSessions();renderDonut();renderQuestions();renderTeachers();renderFeedbacks()}
+function renderAll(){renderKpis();renderDimensions();renderSessions();renderDonut();renderQuestions();renderTeachers();renderRecommendations();renderFeedbacks()}
 
 function renderKpis(){
   const q10=filteredRows.map(r=>num(r.q10)).filter(v=>v!=null);
@@ -644,6 +649,20 @@ function renderTeachers(){
   }).join("");
 
   c.innerHTML=head+rows+`<div class="teacher-ranking-note">※ 排名以10題整體平均為主；若平均相同，再依滿意率與回覆數排序。建議解讀時同步參考 N 值。</div>`;
+}
+
+function renderRecommendations(){
+  const rows=filteredRows.filter(r=>![true,1,"true","1"].includes(r.noRecommend))
+    .map(r=>({row:r,name:String(r.recommendTeacher??"").trim(),topic:String(r.recommendTopic??"").trim()}))
+    .filter(r=>r.name||r.topic);
+  const counts=new Map();
+  rows.forEach(r=>{if(r.name)counts.set(r.name,(counts.get(r.name)||0)+1)});
+  const ranked=[...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],"zh-Hant"));
+  document.getElementById("recommendationSummary").innerHTML=ranked.map(([name,n])=>
+    `<span class="tag orange">${esc(name)} · ${n} 份推薦</span>`).join("");
+  document.getElementById("recommendationList").innerHTML=rows.length?rows.map(({row,name,topic})=>
+    `<div class="feedback"><div class="meta"><span>${esc(row.date||"")}</span><span>${esc(row.level||"")}</span></div><div class="text">期待邀請：${esc(name||"未填寫教師")}</div><div class="text" style="white-space:pre-wrap;overflow-wrap:anywhere">建議主題：${esc(topic||"未填寫主題")}</div></div>`).join(""):
+    '<div class="empty" style="grid-column:1/-1">目前篩選條件沒有推薦教師或授課主題</div>';
 }
 
 function renderFeedbacks(){
